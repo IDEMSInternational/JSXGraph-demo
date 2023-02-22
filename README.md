@@ -18,10 +18,33 @@ should be
 ```
         var board = JXG.JSXGraph.initBoard(divid, {
 ```
-
-
 ### JSXGRAPH Version
-The version of JSXGraph used is defined in lines 9 and 10 in the template. 
+The version of JSXGraph used is defined in lines 9 and 10 in the template. Ensure you have the correct version set up. This is determined in your STACK installation. (If you create a jsxgraph with functions from newer versions they will not work when you transfer them to STACK.)
+### Extracting answers 
+Example 1:
+There are 8 points that I'm evaluating in STACK so I define 8 input answers in the block 'opening' as follows
+```
+[[jsxgraph input-ref-ans1="sR1" input-ref-ans2="sR2" input-ref-ans3="sR3" input-ref-ans4="sR4" input-ref-ans5="sR5" input-ref-ans6="sR6" input-ref-ans7="sR7" input-ref-ans8="sR8"]]
+```
+I then bind the points to the answers
+```
+/* Set answers from state of graph */
+stack_jxg.bind_point(sR1,top_lq);
+stack_jxg.bind_point(sR2,bot_lq);
+stack_jxg.bind_point(sR3,top_med);
+stack_jxg.bind_point(sR4,bot_med);
+stack_jxg.bind_point(sR5,top_uq);
+stack_jxg.bind_point(sR6,bot_uq);
+stack_jxg.bind_point(sR7,mid_lq);
+stack_jxg.bind_point(sR8,mid_uq);
+board.unsuspendUpdate();
+```
+### Changing size
+When creating the JSXGraph block in STACK you can define the dimensions of your box. For example:
+```
+[[jsxgraph height='100px' width='300px']]
+```
+will create a box of height 100px and width 300px.
 ## Useful links
 * [JSXGraph webiste](https://jsxgraph.uni-bayreuth.de/wp/index.html)
 * [JSXGraph wiki](https://jsxgraph.org/wiki/index.php/Main_Page) - Some guides and examples
