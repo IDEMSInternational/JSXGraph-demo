@@ -26,7 +26,7 @@ There are 8 points that I'm evaluating in STACK so I define 8 input answers in t
 ```
 [[jsxgraph input-ref-ans1="sR1" input-ref-ans2="sR2" input-ref-ans3="sR3" input-ref-ans4="sR4" input-ref-ans5="sR5" input-ref-ans6="sR6" input-ref-ans7="sR7" input-ref-ans8="sR8"]]
 ```
-I then bind the points to the answers
+I then bind the points to the answers as follows
 ```
 /* Set answers from state of graph */
 stack_jxg.bind_point(sR1,top_lq);
