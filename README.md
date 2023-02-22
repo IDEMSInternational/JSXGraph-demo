@@ -9,6 +9,17 @@ For individual projects you can committ directly to the master branch. For all c
 ## Useful considerations
 ### Previewing
 You can view your JSXGraph by opening the file through a browser. If you make changes, you should save them and refresh the browser to see the changes. Recall that you can right-click on the file and reveal in file explorer to find it directly. 
+## STACKifying
+### Change 'jxgbox' to divid
+```
+        var board = JXG.JSXGraph.initBoard('jxgbox', {
+```
+should be 
+```
+        var board = JXG.JSXGraph.initBoard(divid, {
+```
+
+
 ### JSXGRAPH Version
 The version of JSXGraph used is defined in lines 9 and 10 in the template. 
 ## Useful links
