@@ -25,7 +25,10 @@
     <!-- Start your jsxgraph here -->
     <script>
         
-        var board = JXG.JSXGraph.initBoard('jxgbox', { // STACK: when moving to STACK change 'jxgboard' for divid
+        var x_coord = 1; /*STACK Variable*/
+        var y_coord = 1; /*STACK Variable*/
+
+        var board = JXG.JSXGraph.initBoard('jxgbox', { /* STACK: when moving to STACK change 'jxgboard' for divid*/
             boundingbox: [-1, 7, 9, -1],
             keepaspectratio: true,
             showCopyright: false,
@@ -33,7 +36,10 @@
             showNavigation: true
         });
 
-
+        var point = board.create('point',[x_coord,y_coord],{
+            size:3,
+            snapToGrid: true
+        });
 
 
     </script>

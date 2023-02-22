@@ -24,16 +24,22 @@
 
     <!-- Start your jsxgraph here -->
     <script>
-        
+        var x_min = -1;
+        var x_max = 9;
+        var y_min = -1;
+        var y_max = 7;
+
         var board = JXG.JSXGraph.initBoard('jxgbox', { // STACK: when moving to STACK change 'jxgboard' for divid
-            boundingbox: [-1, 7, 9, -1],
+            boundingbox: [x_min, y_max, x_max, y_min],
             keepaspectratio: true,
             showCopyright: false,
             axis: true,
             showNavigation: true
         });
 
-
+        var boundary = board.create('polygon',[[x_min,y_min],[x_min,y_max],[x_max,y_max],[x_max,y_min]], {
+            withLines:true
+        });
 
 
     </script>
