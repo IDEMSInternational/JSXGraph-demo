@@ -1,0 +1,328 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>JSXGraph template</title>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <!-- The jsxgraph version is defined in the next 2 lines (eg @1.4.5 defines version 1.4.5) -->
+    <link href="https://cdn.jsdelivr.net/npm/jsxgraph@1.4.5/distrib/jsxgraph.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.jsdelivr.net/npm/jsxgraph@1.4.5/distrib/jsxgraphcore.js" type="text/javascript"
+        charset="UTF-8"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" id="MathJax-script" async></script>
+</head>
+
+<body>
+
+    <!-- You can define the width and height of your applet here -->
+    <!-- If it's not the standard 600 by 600 then the syntax for STACK is 
+        [[jsxgraph height='Apx' width='Bpx']] where A is the height and B
+        is the width -->
+    <div id="jxgbox" class="jxgbox" style="width:600px; height:600px;">
+    </div>
+
+    <!-- Start your jsxgraph here -->
+    <script>
+
+        function plot_histogram(data, numbars, board) {
+
+            var min_bound = Math.floor(Math.min.apply(Math, data));
+            var max_bound = Math.ceil(Math.max.apply(Math, data));
+            var range = max_bound - min_bound;
+
+            var numbars = Math.abs(Math.ceil(numbars));
+
+            if (numbars == 0) {
+                numbars = 1;
+            }
+            var barwidth = range / numbars;
+
+            /*var tot = data.reduce((a, b) => a + b, 0);*/
+
+
+            var relfreq = [];
+            for (var b = 0; b < numbars; b++) {
+                var data_in_bar = data.filter(function (d) {
+                    if (b == 0) {
+                        return (d >= min_bound + b * barwidth) && (d <= min_bound + (b + 1) * barwidth)
+                    } else {
+                        return (d > min_bound + b * barwidth) && (d <= min_bound + (b + 1) * barwidth)
+                    }
+                });
+                relfreq.push(data_in_bar.length)
+            }
+
+
+
+            var ymax = Math.max.apply(Math, relfreq) / barwidth;
+
+
+            board.setBoundingBox([min_bound - 0.05 * range, ymax * 1.25, max_bound + 0.05 * range, -(ymax * 0.2)], false);
+
+            /* create axes*/
+            var origin = board.create('point', [min_bound - 0.1 * min_bound, 0], {
+                face: '',
+                visible: false,
+                size: 2,
+                name: '',
+                fixed: true
+            });
+            var y_end = board.create('point', [min_bound - 0.1 * min_bound, ymax * 1.1], {
+                face: '',
+                visible: false,
+                size: 2,
+                name: '',
+                fixed: true
+            });
+            var x_end = board.create('point', [max_bound * 1.1, 0], {
+                face: '',
+                visible: false,
+                size: 2,
+                name: '',
+                fixed: true
+            });
+            var x_axis = board.create('segment', [origin, x_end], {
+                strokeColor: 'black',
+                strokeWidth: 1
+            });
+
+
+            var Lx = Math.ceil(range / 3);
+            var x_tick_pos = [min_bound, min_bound + Lx, min_bound + 2 * Lx, min_bound + 3 * Lx];
+            var x_tick_label = [min_bound, min_bound + Lx, min_bound + 2 * Lx, min_bound + 3 * Lx];
+            x_tick_pos.forEach(function (el, index, arr) {
+                arr[index] = el - 0.9 * min_bound
+            });
+            var t_x = board.create('ticks', [x_axis, x_tick_pos], {
+                drawLabels: true,
+                labels: x_tick_label,
+                minorTicks: 0,
+                label: {
+                    autoPosition: true,
+                    offset: [-7.5, -12.5]
+                }
+            });
+
+
+            /*plot histogram*/
+            for (var i = 0; i < numbars; i++) {
+
+                var p0 = board.create('point', [min_bound + (i) * barwidth, 0], {
+                    face: '',
+                    visible: false,
+                    size: 2,
+                    name: '',
+                    fixed: true
+
+                });
+
+                var p1 = board.create('point', [min_bound + (i) * barwidth, relfreq[i] / barwidth], {
+                    face: '',
+                    visible: false,
+                    size: 2,
+                    name: '',
+                    fixed: true
+
+                });
+
+                var p2 = board.create('point', [min_bound + (i + 1) * barwidth, 0], {
+                    face: '',
+                    visible: false,
+                    size: 2,
+                    name: '',
+                    fixed: true
+
+                });
+
+                var p3 = board.create('point', [min_bound + (i + 1) * barwidth, relfreq[i] / barwidth], {
+                    face: '',
+                    visible: false,
+                    size: 2,
+                    name: '',
+                    fixed: true
+
+                });
+                board.create('polygon', [p0, p1, p3, p2], {
+                    borders: {
+                        strokeColor: 'blue'
+                    },
+                    fillColor: ''
+                })
+            }
+            return ymax;
+        }
+
+        var data = [145.836766377, 146.60645057, 155.257821332, 157.64147293, 162.16585521, 162.392744671, 163.336781071, 165.603167795, 167.243400316, 169.047092302, 169.343112928, 169.813730381, 170.654709596, 171.12624218, 171.463750492, 172.353473535, 173.452578278, 173.576560608, 174.567720033, 177.156653501, 177.286365013, 178.213988525, 179.301423016, 179.810059342, 181.466400337, 184.022939553, 184.122893336, 184.84449534, 185.027540771, 185.184274451, 185.384039765, 185.894946607, 187.600527413, 188.699083566, 188.840820533, 189.582072439, 189.90315301, 190.685471939, 191.056436398, 191.126461629, 191.536544916, 192.464353085, 193.028236813, 193.123732185, 193.867527794, 193.938448507, 194.718892703, 195.644303966, 197.144964742, 197.30287708, 198.439731509, 199.423600016, 200.178676987, 200.930281499, 201.329141877, 202.604248851, 203.802738121, 203.994746472, 204.717160255, 205.718183726, 205.91562637, 206.44245106, 206.819332762, 207.126288185, 207.654109835, 207.975943263, 208.962134135, 209.781300799, 209.801297523, 209.882418984, 210.074287563, 211.914137633, 212.413809697, 212.429781384, 213.375340027, 215.455866237, 215.664816522, 217.305890738, 217.480773158, 217.979054075, 219.824530175, 223.791800884, 224.019147909, 224.877449769, 228.074739022, 229.200083659, 231.273375336, 232.367555071, 233.300684505, 233.333893419, 233.375941157, 234.449758947, 237.677543031, 239.585137486, 244.914295398, 250.44346475, 252.841141809, 265.667067592, 273.574675723, 288.503761967]; /*STACK INPUT HERE*/
+
+        var numbars = 30; /*STACK INPUT HERE*/
+
+        var board = JXG.JSXGraph.initBoard('jxgbox', { /*STACK CHANGE TO DIVID*/
+            axis: false,
+            keepaspectratio: false,
+            showCopyright: false,
+            showNavigation: false,
+            pan: { enable: false }
+        });
+
+        var maxy = plot_histogram(data, numbars, board);
+
+
+        /* Creating box plot*/
+
+        /* Define parameters from histogram for box plot*/
+        var min_x = Math.floor(Math.min.apply(Math, data));
+        var max_x = Math.ceil(Math.max.apply(Math, data));
+        var max_y = maxy * 1.2;
+        var mid_y = maxy * 1.15;
+        var min_y = maxy * 1.1;
+        var lq_x = min_x + (max_x - min_x) / 4;
+        var med_x = min_x + (max_x - min_x) / 2;
+        var uq_x = min_x + 3 * (max_x - min_x) / 4;
+
+        /*create upper and lower bounds for the box plot*/
+        var bot_line = board.create('line', [[0, min_y], [1, min_y]], {
+            straightFirst: true,
+            straightLast: true,
+            strokeWidth: 2,
+            visible: false,
+            fixed: true
+        });
+        var top_line = board.create('line', [[0, max_y], [1, max_y]], {
+            straightFirst: true,
+            straightLast: true,
+            strokeWidth: 2,
+            visible: false,
+            fixed: true
+        });
+
+
+        /* lq vertical and left horizontal lines start*/
+        var top_lq = board.create('point', [lq_x, max_y], {
+            name: '',
+            visible: false
+        });
+
+        var bot_lq = board.create('point', [lq_x, min_y], {
+            name: '',
+            visible: false
+        });
+
+        var mid_lq = board.create('point', [lq_x, mid_y], {
+            name: '',
+            visible: false
+        });
+
+        var mid_min = board.create('point', [min_x, mid_y], {
+            name: '',
+            visible: false
+        });
+
+        var lq_line = board.create('segment', [top_lq, bot_lq], {
+            strokeWidth: 2,
+            visible: true,
+            fixed: true
+        });
+
+        var mid_line_left = board.create('segment', [mid_lq, mid_min], {
+            strokeWidth: 2,
+            visible: true,
+            fixed: true
+        });
+        /*lq vertical and left horizontal lines end*/
+
+
+        /*med vertical line start*/
+        var top_med = board.create('point', [med_x, max_y], {
+            name: '',
+            visible: false
+        });
+
+        var bot_med = board.create('point', [med_x, min_y], {
+            name: '',
+            visible: false
+        });
+
+        var med_line = board.create('segment', [top_med, bot_med], {
+            strokeWidth: 2,
+            visible: true,
+            fixed: true
+        });
+        /*med vertical line end*/
+
+        /*uq vertical and right horizontal lines start*/
+        var top_uq = board.create('point', [uq_x, max_y], {
+            name: '',
+            visible: false
+        });
+
+        var bot_uq = board.create('point', [uq_x, min_y], {
+            name: '',
+            visible: false
+        });
+
+        var uq_line = board.create('segment', [top_uq, bot_uq], {
+            strokeWidth: 2,
+            visible: true,
+            fixed: true
+        });
+
+        var mid_uq = board.create('point', [uq_x, mid_y], {
+            name: '',
+            visible: false
+        });
+
+        var mid_max = board.create('point', [max_x, mid_y], {
+            name: '',
+            visible: false
+        });
+
+        var mid_line_right = board.create('segment', [mid_uq, mid_max], {
+            strokeWidth: 2,
+            visible: true,
+            fixed: true
+        });
+        /*uq vertical and right horizontal lines end*/
+
+
+        /*top horizontal line start*/
+        var top_line = board.create('segment', [top_lq, top_uq], {
+            strokeWidth: 2,
+            visible: true,
+            fixed: true
+        });
+        /*top horizontal line end*/
+
+        /*bottom horizontal line start*/
+        var bot_line = board.create('segment', [bot_lq, bot_uq], {
+            strokeWidth: 2,
+            visible: true,
+            fixed: true
+        });
+        /*top horizontal line end*/
+
+        /*max and min lines*/
+        var min_line = board.create('segment', [[min_x, min_y], [min_x, max_y]], {
+            strokeWidth: 2,
+            visible: true,
+            fixed: true
+        });
+
+        var max_line = board.create('segment', [[max_x, min_y], [max_x, max_y]], {
+            strokeWidth: 2,
+            visible: true,
+            fixed: true
+        });
+
+        var data_name = board.create('text', [min_x, -0.1 * maxy, "Data A"], {
+            fixed: true,
+            fontSize: 16
+        });
+
+
+
+
+    </script>
+
+</body>
+
+</html>
